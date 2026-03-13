@@ -157,9 +157,17 @@ Copy `.env.example` to `.env` and fill in values. Never commit `.env`.
 ### Core
 
 ```
-ALCHEMY_API_KEY=        # Alchemy API key (Base chain)
-DIAMOND_ADDRESS=        # P2P.me Diamond contract address on Base
-PUSH_NOTIF_X_SECRET_KEY=  # Shared secret for push notification endpoint
+ALCHEMY_API_KEY=           # Alchemy API key (Base chain)
+DIAMOND_ADDRESS=           # P2P.me Diamond contract address on Base
+```
+
+### Push Notifications
+
+```
+PUSH_NOTIF_X_SECRET_KEY=   # Shared secret for your push notification endpoint
+PUSH_NOTIF_BASE_URL=       # Push endpoint URL, e.g. https://push.example.com/push/v2
+PUSH_NOTIF_IMAGE_URL=      # Icon shown in push notification, e.g. https://example.com/favicon.svg
+PUSH_NOTIF_LANDING_URL=    # URL opened when merchant taps the notification
 ```
 
 ### OnFail Telegram
@@ -197,6 +205,9 @@ See `.env.example` for the full list.
 * **ALCHEMY_API_KEY** — [Alchemy](https://www.alchemy.com/) (Base chain)
 * **DIAMOND_ADDRESS** — The P2P.me Diamond contract on Base
 * **PUSH_NOTIF_X_SECRET_KEY** — shared secret for your push notification endpoint
+* **PUSH_NOTIF_BASE_URL** — your push notification server endpoint
+* **PUSH_NOTIF_IMAGE_URL** — icon URL shown in push notifications
+* **PUSH_NOTIF_LANDING_URL** — URL opened when a merchant taps the notification
 * **TELEGRAM_*** — Create bots with [BotFather](https://t.me/BotFather); use your channel/group IDs and topic IDs for threads
 
 ---
