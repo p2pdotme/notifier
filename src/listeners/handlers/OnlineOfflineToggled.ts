@@ -139,10 +139,10 @@ export const onlineOfflineToggledHandler = async (
 
     const buildOfflineMsg = (curr: string) =>
         curr === 'Brl'
-            ? `${actor} está offline porque não aceitou os últimos ${threshold} pedidos atribuídos`
+            ? `${actor} está inativo e offline porque não aceitou os últimos ${threshold} pedidos atribuídos`
             : curr === 'Ars' || curr === 'Mex' || curr === 'Ven'
-                ? `${actor} fue puesto en offline por no aceptar las últimas ${threshold} órdenes asignadas`
-                : `${actor} is turned offline for not accepting the last ${threshold} assigned orders`;
+                ? `${actor} está inactivo y fue puesto en offline por no aceptar las últimas ${threshold} órdenes asignadas`
+                : `${actor} is inactive & turned offline for not accepting the last ${threshold} assigned orders`;
 
     const buildOnlineMsg = (curr: string) =>
         curr === 'Brl'
@@ -155,8 +155,7 @@ export const onlineOfflineToggledHandler = async (
 
     // primary: based on function name + isOnline
     if (
-        detectedFn === 'removeNonEligibleMerchants' ||
-        detectedFn === 'toggleMerchantsOffline'
+        detectedFn === 'removeNonEligibleMerchantsByCircleId'
     ) {
         if (isOnline === false) msg = buildOfflineMsg(currency);
         else if (isOnline === true) msg = buildOnlineMsg(currency);
