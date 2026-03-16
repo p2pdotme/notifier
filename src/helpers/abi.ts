@@ -2007,9 +2007,9 @@ export const DIAMOND_FUNCTIONS = [
     {
         "inputs": [
             {
-                "internalType": "bytes32",
-                "name": "currency",
-                "type": "bytes32"
+                "internalType": "uint256",
+                "name": "circleId",
+                "type": "uint256"
             },
             {
                 "internalType": "address[]",
@@ -2022,25 +2022,7 @@ export const DIAMOND_FUNCTIONS = [
                 "type": "address[]"
             }
         ],
-        "name": "removeNonEligibleMerchants",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "bytes32",
-                "name": "currency",
-                "type": "bytes32"
-            },
-            {
-                "internalType": "address[]",
-                "name": "merchants",
-                "type": "address[]"
-            }
-        ],
-        "name": "toggleMerchantsOffline",
+        "name": "removeNonEligibleMerchantsByCircleId",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
