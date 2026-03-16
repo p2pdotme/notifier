@@ -54,6 +54,6 @@ export async function addNotificationJob(eventName: string, parsed: any, config:
         parsed: safeParsed,
         config,
     }, {
-        jobId: `${eventName}-${safeParsed?.transactionHash}`,
+        jobId: `${eventName}-${safeParsed?.currency ?? Date.now()}`,
     });
 }
