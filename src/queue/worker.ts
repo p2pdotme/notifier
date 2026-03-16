@@ -25,7 +25,7 @@ export function startWorker(config: CommonConfig) {
         async (job) => {
             const { eventName, parsed, config } = job.data;
             const jobId = job.id;
-            const tx = parsed?.transactionHash ?? 'unknown';
+            const tx = parsed?.transactionHash;
             const handler = handlers[eventName];
             if (!handler) {
                 await sendOnFail(config, `No handler registered for event: ${eventName}`);
@@ -40,23 +40,24 @@ export function startWorker(config: CommonConfig) {
 
             const isLastAttempt = job.attemptsMade >= (job.opts?.attempts ?? 1) - 1;
 
+            const txLabel = tx ? ` tx=${tx}` : '';
             try {
-                logger.info(`⏩ processing job id=${jobId} handler=${eventName} ${tx.length > 0 ? `tx=${tx}` : ''}`);
+                logger.info(`⏩ processing job id=${jobId} handler=${eventName}${txLabel}`);
                 const ok = await withTimeout(handler(parsed, provider, config), HANDLER_TIMEOUT_MS);
                 if (!ok) {
                     // handler returned false = job completes (no retry), so always alert immediately
                     await sendOnFail(
                         config,
-                        `Handler returned false: ${eventName} tx=${tx}`
+                        `Handler returned false: ${eventName}${txLabel}`
                     );
                 } else {
-                    logger.info(`✅ handler ok id=${jobId} event=${eventName} tx=${tx}`);
+                    logger.info(`✅ handler ok id=${jobId} event=${eventName}${txLabel}`);
                 }
             } catch (err: any) {
                 const reason = err?.stack ?? err?.message;
-                logger.error(`❌ Worker error id=${jobId} event=${eventName} tx=${tx}:`, reason);
+                logger.error(`❌ Worker error id=${jobId} event=${eventName}${txLabel}:`, reason);
                 if (isLastAttempt) {
-                    await sendOnFail(config, `Worker error\nEvent: ${eventName}\nTx: ${tx}\n\n${reason}`);
+                    await sendOnFail(config, `Worker error\nEvent: ${eventName}${tx ? `\nTx: ${tx}` : ''}\n\n${reason}`);
                 }
                 throw err;
             }
