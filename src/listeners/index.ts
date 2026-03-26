@@ -1,7 +1,7 @@
 import { getHttpProvider, getHttpUrl, getWsUrl, getWsProvider } from '../helpers/provider';
 import { DIAMOND_ABI } from '../helpers/abi';
 import { processLog } from './notifier';
-import { Contract } from 'ethers';
+import { Interface } from 'ethers';
 import { logger } from '../helpers/logger';
 import { OrderConfig } from '../helpers/types';
 import { sendTelegramMessage } from '../helpers/utils';
@@ -29,29 +29,49 @@ export async function startListeners(config: OrderConfig) {
     const setup = () => {
         const wsUrl = getWsUrl(config.alchemyApiKey);
         const wsProvider = getWsProvider(wsUrl);
-        const contract = new Contract(diamondAddress, DIAMOND_ABI, wsProvider);
+        const iface = new Interface(DIAMOND_ABI);
 
         for (const eventName of events) {
-            contract.on(eventName, async (...args: any[]) => {
-                const payload = args[args.length - 1];
+            let topicHash: string;
+            try {
+                topicHash = iface.getEvent(eventName)!.topicHash;
+            } catch {
+                logger.warn(`⚠️ notifiers: no event fragment for ${eventName}, skipping`);
+                continue;
+            }
 
+            // Use raw log subscription instead of contract.on() to avoid ethers v6 spreading
+            // decoded args to the callback. When a complex struct (e.g. Order with strings/arrays)
+            // has a deferred ABI decode error, ethers accesses result[N] while building the spread
+            // call BEFORE the callback body runs — so our try-catch never fires and it becomes an
+            // unhandledRejection. Raw log subscriptions receive the Log object directly with no
+            // arg spreading, and we decode manually under our own error handling.
+            wsProvider.on({ address: diamondAddress, topics: [topicHash] }, async (rawLog: any) => {
                 try {
-                    if (!payload || typeof payload !== 'object') {
-                        logger.warn(`❌ listener: unexpected payload shape: ${eventName}`);
+                    if (!rawLog || !rawLog.transactionHash) {
+                        logger.warn(`❌ listener: unexpected log shape for ${eventName}`);
                         return;
                     }
+
+                    // Try to decode args. A deferred decode error here is caught and args falls
+                    // back to null. Handlers that need args re-decode via decodeEventArgs() which
+                    // reads from log.topics + log.data.
+                    let decodedArgs: any = null;
+                    try {
+                        const decoded = iface.parseLog(rawLog);
+                        if (decoded) decodedArgs = decoded.args;
+                    } catch (decodeErr) {
+                        logger.warn(`⚠️ listener: parseLog failed for ${eventName}: ${String(decodeErr)}`);
+                    }
+
+                    const payload = { args: decodedArgs, log: rawLog };
 
                     logger.info(`📥 ${eventName}: received log`);
                     await processLog(eventName, payload, httpProvider, config);
                 } catch (err: any) {
                     logger.error(
-                        `❌ listener handler failed for event=${eventName}: ${String(
-                            err?.message ?? err,
-                        )}`,
+                        `❌ listener handler failed for event=${eventName}: ${String(err?.message ?? err)}`,
                     );
-                    if (err?.errors) {
-                        logger.error(`❌ inner errors: ${String(err.errors)}`);
-                    }
                 }
             });
         }
@@ -94,8 +114,8 @@ export async function startListeners(config: OrderConfig) {
                 msg,
             ).catch(() => {});
 
-            // remove contract listeners for this provider
-            contract.removeAllListeners();
+            // remove raw log listeners for this provider
+            wsProvider.removeAllListeners();
 
             // minimal cleanup: close old ws + destroy provider
             try {

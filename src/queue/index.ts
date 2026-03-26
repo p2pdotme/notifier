@@ -22,13 +22,30 @@ function normalizeForQueue(value: any, seen = new WeakSet()): any {
             return value.toString();
         }
         seen.add(value);
-        if (Array.isArray(value)) return value.map((v) => normalizeForQueue(v, seen));
+        if (Array.isArray(value)) {
+            // Use index loop instead of .map() so a deferred ABI decode error on one element
+            // (e.g. ethers v6 Result with a lazy-decode failure) doesn't abort the whole array.
+            const arr: any[] = [];
+            for (let i = 0; i < value.length; i++) {
+                try {
+                    arr.push(normalizeForQueue((value as any)[i], seen));
+                } catch {
+                    arr.push(null);
+                }
+            }
+            return arr;
+        }
         const out: any = {};
         for (const k in value) {
             try {
                 out[k] = normalizeForQueue((value as any)[k], seen);
             } catch {
-                out[k] = String((value as any)[k]);
+                // String(value[k]) could also throw if value[k] is a deferred-error Result element
+                try {
+                    out[k] = String((value as any)[k]);
+                } catch {
+                    out[k] = null;
+                }
             }
         }
         return out;

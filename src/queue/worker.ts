@@ -87,6 +87,7 @@ export function startWorker(config: CommonConfig) {
 
                 const now = Date.now();
                 for (const j of activeJobs) {
+                    if (!j) continue;
                     const processedOn = (j as any).processedOn ?? j.timestamp;
                     if (!processedOn) continue;
 
