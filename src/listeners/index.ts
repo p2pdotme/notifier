@@ -6,6 +6,8 @@ import { logger } from '../helpers/logger';
 import { OrderConfig } from '../helpers/types';
 import { sendTelegramMessage } from '../helpers/utils';
 
+const iface = new Interface(DIAMOND_ABI);
+
 export async function startListeners(config: OrderConfig) {
     const httpUrl = getHttpUrl(config.alchemyApiKey);
     const httpProvider = getHttpProvider(httpUrl);
@@ -26,55 +28,88 @@ export async function startListeners(config: OrderConfig) {
         'OnlineOfflineToggled',
     ];
 
+    // Pre-compute topic hashes for each event and build a reverse lookup
+    const topicToEvent: Record<string, string> = {};
+    const topicHashes: string[] = [];
+    for (const eventName of events) {
+        const eventFragment = iface.getEvent(eventName);
+        if (eventFragment) {
+            const topicHash = eventFragment.topicHash;
+            topicToEvent[topicHash] = eventName;
+            topicHashes.push(topicHash);
+        }
+    }
+
     const setup = () => {
         const wsUrl = getWsUrl(config.alchemyApiKey);
         const wsProvider = getWsProvider(wsUrl);
-        const iface = new Interface(DIAMOND_ABI);
 
-        for (const eventName of events) {
-            let topicHash: string;
+        // Listen for raw logs instead of using contract.on() to avoid
+        // ethers.js v6 spreading decoded args which throws deferred errors
+        // when complex structs (Order, MerchantDetails) can't be fully decoded.
+        const filter = {
+            address: diamondAddress,
+            topics: [topicHashes],
+        };
+
+        wsProvider.on(filter, async (log: any) => {
+            const topic0 = log.topics?.[0];
+            const eventName = topic0 ? topicToEvent[topic0] : undefined;
+            if (!eventName) return;
+
             try {
-                topicHash = iface.getEvent(eventName)!.topicHash;
-            } catch {
-                logger.warn(`⚠️ notifiers: no event fragment for ${eventName}, skipping`);
-                continue;
-            }
-
-            // Use raw log subscription instead of contract.on() to avoid ethers v6 spreading
-            // decoded args to the callback. When a complex struct (e.g. Order with strings/arrays)
-            // has a deferred ABI decode error, ethers accesses result[N] while building the spread
-            // call BEFORE the callback body runs — so our try-catch never fires and it becomes an
-            // unhandledRejection. Raw log subscriptions receive the Log object directly with no
-            // arg spreading, and we decode manually under our own error handling.
-            wsProvider.on({ address: diamondAddress, topics: [topicHash] }, async (rawLog: any) => {
+                // Decode the log ourselves with proper error handling
+                let decoded: any;
                 try {
-                    if (!rawLog || !rawLog.transactionHash) {
-                        logger.warn(`❌ listener: unexpected log shape for ${eventName}`);
-                        return;
-                    }
-
-                    // Try to decode args. A deferred decode error here is caught and args falls
-                    // back to null. Handlers that need args re-decode via decodeEventArgs() which
-                    // reads from log.topics + log.data.
-                    let decodedArgs: any = null;
-                    try {
-                        const decoded = iface.parseLog(rawLog);
-                        if (decoded) decodedArgs = decoded.args;
-                    } catch (decodeErr) {
-                        logger.warn(`⚠️ listener: parseLog failed for ${eventName}: ${String(decodeErr)}`);
-                    }
-
-                    const payload = { args: decodedArgs, log: rawLog };
-
-                    logger.info(`📥 ${eventName}: received log`);
-                    await processLog(eventName, payload, httpProvider, config);
+                    decoded = iface.parseLog({
+                        topics: log.topics,
+                        data: log.data,
+                    });
                 } catch (err: any) {
-                    logger.error(
-                        `❌ listener handler failed for event=${eventName}: ${String(err?.message ?? err)}`,
+                    logger.warn(
+                        `⚠️ listener: failed to decode ${eventName}: ${String(err.message)}`
                     );
+                    return;
                 }
-            });
-        }
+
+                if (!decoded) {
+                    logger.warn(`⚠️ listener: null decode for ${eventName}`);
+                    return;
+                }
+
+                // Safely extract args to avoid deferred errors during
+                // JSON serialization (BullMQ). Access each index in a try/catch.
+                const safeArgs: Record<string, any> = {};
+                for (let i = 0; i < decoded.fragment.inputs.length; i++) {
+                    const name = decoded.fragment.inputs[i].name;
+                    try {
+                        safeArgs[i] = decoded.args[i];
+                        if (name) safeArgs[name] = decoded.args[i];
+                    } catch (err: any) {
+                        logger.warn(
+                            `⚠️ listener: deferred error for ${eventName} arg[${i}] (${name}): ${String(err.message)}`
+                        );
+                        safeArgs[i] = null;
+                        if (name) safeArgs[name] = null;
+                    }
+                }
+
+                const payload = {
+                    args: safeArgs,
+                    log,
+                    transactionHash: log.transactionHash,
+                };
+
+                logger.info(`📥 ${eventName}: received log`);
+                await processLog(eventName, payload, httpProvider, config);
+            } catch (err: any) {
+                logger.error(
+                    `❌ listener handler failed for event=${eventName}: ${String(
+                        err?.message ?? err,
+                    )}`,
+                );
+            }
+        });
 
         logger.info(`✅ listeners attached for diamond: ${diamondAddress}`);
 
@@ -114,7 +149,7 @@ export async function startListeners(config: OrderConfig) {
                 msg,
             ).catch(() => {});
 
-            // remove raw log listeners for this provider
+            // remove all listeners for this provider
             wsProvider.removeAllListeners();
 
             // minimal cleanup: close old ws + destroy provider

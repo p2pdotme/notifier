@@ -7,7 +7,7 @@ import { OrderConfig } from '../helpers/types';
 export async function processLog(eventName: string, payload: any, provider: any, config: OrderConfig) {
     if (!payload) return;
 
-    const txHash = payload.log?.transactionHash;
+    const txHash = payload.transactionHash ?? payload.log?.transactionHash;
     if (!txHash) return;
 
     logger.info(`⏩ Processing event: ${eventName} tx=${txHash}`);

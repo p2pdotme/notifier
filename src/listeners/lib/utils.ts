@@ -22,9 +22,24 @@ export const getEventsFromTransaction = async (
             if (log.address.toLowerCase() !== contractAddress.toLowerCase()) continue
             try {
                 const parsed = iface.parseLog(log)
+                if (!parsed) continue
+
+                // Safely extract args to avoid ethers.js v6 deferred errors
+                const safeArgs: Record<string, any> = {}
+                for (let i = 0; i < parsed.fragment.inputs.length; i++) {
+                    const name = parsed.fragment.inputs[i].name
+                    try {
+                        safeArgs[i] = parsed.args[i]
+                        if (name) safeArgs[name] = parsed.args[i]
+                    } catch {
+                        safeArgs[i] = null
+                        if (name) safeArgs[name] = null
+                    }
+                }
+
                 out.push({
-                    name: parsed?.name,
-                    args: parsed?.args,
+                    name: parsed.name,
+                    args: safeArgs,
                     log
                 })
             } catch (err) {
