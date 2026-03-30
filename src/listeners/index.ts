@@ -135,9 +135,30 @@ export async function startListeners(config: OrderConfig) {
             return;
         }
 
+        // Heartbeat: every 30s check ws readyState + make an RPC call
+        const heartbeatInterval = setInterval(async () => {
+            try {
+                if (ws.readyState !== 1) { // 1 = OPEN
+                    clearInterval(heartbeatInterval);
+                    scheduleReconnect(`ws not in OPEN state (readyState=${ws.readyState})`);
+                    return;
+                }
+                // RPC-level check: if the connection is stale this will time out
+                const blockPromise = wsProvider.getBlockNumber();
+                const timeout = new Promise<never>((_, reject) =>
+                    setTimeout(() => reject(new Error('heartbeat timeout')), 10_000),
+                );
+                await Promise.race([blockPromise, timeout]);
+            } catch (err: any) {
+                clearInterval(heartbeatInterval);
+                scheduleReconnect(`heartbeat failed: ${String(err?.message ?? err)}`);
+            }
+        }, 30_000);
+
         const scheduleReconnect = (reason: string) => {
             if (reconnectScheduled) return;
             reconnectScheduled = true;
+            clearInterval(heartbeatInterval);
 
             const msg = `⚠️ notifiers WS issue: ${reason}. Reconnecting in 5s...`;
             logger.error(msg);
