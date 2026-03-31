@@ -13,6 +13,8 @@ const isAddressLike = (v: unknown): boolean =>
 /**
  * Decode args from the raw log using the ABI.
  * This avoids any BullMQ / JSON mangling of `args` / `_order`.
+ * Safely wraps each arg access in try/catch to avoid ethers.js v6
+ * deferred errors when complex structs can't be fully decoded.
  */
 export const decodeEventArgs = (parsed: ParsedEvent): any => {
     const log = parsed.log as any;
@@ -23,7 +25,24 @@ export const decodeEventArgs = (parsed: ParsedEvent): any => {
                 topics: log.topics,
                 data: log.data,
             });
-            return decoded?.args;
+            if (decoded?.args) {
+                // Safely extract each arg to avoid deferred errors
+                const safeArgs: Record<string, any> = {};
+                for (let i = 0; i < decoded.fragment.inputs.length; i++) {
+                    const name = decoded.fragment.inputs[i].name;
+                    try {
+                        safeArgs[i] = decoded.args[i];
+                        if (name) safeArgs[name] = decoded.args[i];
+                    } catch (err: any) {
+                        logger.warn(
+                            `decodeEventArgs: deferred error at arg[${i}] (${name}): ${String(err.message)}`
+                        );
+                        safeArgs[i] = null;
+                        if (name) safeArgs[name] = null;
+                    }
+                }
+                return safeArgs;
+            }
         } catch (err: any) {
             logger.warn(
                 `decodeEventArgs: parseLog failed: ${String(err.message)}; falling back to parsed.args`
