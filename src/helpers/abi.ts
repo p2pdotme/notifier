@@ -1336,7 +1336,7 @@ export const DIAMOND_EVENTS = [
                 "type": "uint256"
             },
             {
-                "indexed": false,
+                "indexed": true,
                 "internalType": "address",
                 "name": "cancelledBy",
                 "type": "address"
