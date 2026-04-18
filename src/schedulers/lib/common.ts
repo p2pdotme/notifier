@@ -29,6 +29,10 @@ export const formatPriceMessage = (currency: string, currentPrices: { buyPrice: 
             return `🇲🇽 Actualización de Precio P2P.me MXN: \n\n🟢 COMPRA USDC @ $${buyFixed} \n🔴 VENTA USDC @ $${sellFixed}`;
         case 'Ven':
             return `🇻🇪 Actualización de Precio P2P.me VES: \n\n🟢 COMPRA USDC @ Bs.${buyFixed} \n🔴 VENTA USDC @ Bs.${sellFixed}`;
+        case 'Ngn':
+            return `🇳🇬 P2P.me NGN Price Update: \n\n🟢 BUY USDC @ ₦${buyFixed} \n🔴 SELL USDC @ ₦${sellFixed}`;
+        case 'Cop':
+            return `🇨🇴 Actualización de Precio P2P.me COP: \n\n🟢 COMPRA USDC @ $${buyFixed} \n🔴 VENTA USDC @ $${sellFixed}`;
         default:
             return `📈 ${currency} Price Update: \n\nBUY: ${buyFixed} \nSELL: ${sellFixed}`;
     }

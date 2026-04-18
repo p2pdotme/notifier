@@ -109,4 +109,14 @@ export type PriceConfig = CommonConfig & {
     telegramVenAlertsBotToken: string;
     telegramVenPriceUpdatesChannelId: string;
     telegramVenPriceUpdatesTopicId: string;
+
+    // NGN-specific
+    telegramNgnAlertsBotToken: string;
+    telegramNgnPriceUpdatesChannelId: string;
+    telegramNgnPriceUpdatesTopicId: string;
+
+    // COP-specific
+    telegramCopAlertsBotToken: string;
+    telegramCopPriceUpdatesChannelId: string;
+    telegramCopPriceUpdatesTopicId: string;
 };

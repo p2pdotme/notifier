@@ -26,13 +26,9 @@ export const priceNotifyHandler = async (
         throw new Error(msg);
     }
 
-    try {
-        await sendTelegramMessage(botToken, channelId, topicId, message);
-        return true;
-    } catch (err: any) {
-        const base = `PriceNotify: error sending message for ${currency}`;
-        const detail = err?.message ?? String(err);
-        logger.error(`${base}:`, detail);
-        throw new Error(`${base}: ${detail}`);
+    const ok = await sendTelegramMessage(botToken, channelId, topicId, message);
+    if (!ok) {
+        throw new Error(`PriceNotify: failed to send Telegram message for ${currency}`);
     }
+    return true;
 };

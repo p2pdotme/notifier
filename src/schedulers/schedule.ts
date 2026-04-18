@@ -6,7 +6,7 @@ import { PriceConfig } from '../helpers/types';
 import { logger } from '../helpers/logger';
 import { withTimeout } from '../helpers/provider';
 
-const CURRENCIES = ['Inr', 'Idr', 'Brl', 'Ars', 'Mex', 'Ven'] as const;
+const CURRENCIES = ['Inr', 'Idr', 'Brl', 'Ars', 'Mex', 'Ven', "Ngn", "Cop"] as const;
 const EVERY_HOUR_MS = 60 * 60 * 1000; // 1 hour
 
 const PRICE_QUEUE_NAME = 'price-schedulers';
