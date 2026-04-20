@@ -76,7 +76,7 @@ export const sendNotification = async (
             notifObject.title = "Pedido atribuído";
             notifObject.description = `Pedido ${orderId} atribuído a você, por favor aceite-o`;
         }
-        else if (currency === "Ars" || currency === "Mex" || currency === "Ven") {
+        else if (currency === "Ars" || currency === "Mex" || currency === "Ven" || currency === "Cop") {
             notifObject.title = "Orden asignada";
             notifObject.description = `Orden ${orderId} asignada a usted, por favor acepte la orden`;
         }
@@ -95,7 +95,7 @@ export const sendNotification = async (
             notifObject.title = "Usuário Pagou";
             notifObject.description = `Usuário pagou para Pedido ${orderId}`;
         }
-        else if (currency === "Ars" || currency === "Mex" || currency === "Ven") {
+        else if (currency === "Ars" || currency === "Mex" || currency === "Ven" || currency === "Cop") {
             notifObject.title = "Usuario Pagó";
             notifObject.description = `Usuario pagó para Orden ${orderId}`;
         }
@@ -113,7 +113,7 @@ export const sendNotification = async (
             notifObject.title = "Usuário Enviou ID de Pagamento";
             notifObject.description = `Usuário enviou id de pagamento para Pedido ${orderId}`;
         }
-        else if (currency === "Ars" || currency === "Mex" || currency === "Ven") {
+        else if (currency === "Ars" || currency === "Mex" || currency === "Ven" || currency === "Cop") {
             notifObject.title = "Usuario Envió ID de Pago";
             notifObject.description = `Usuario envió id de pago para Orden ${orderId}`;
         }

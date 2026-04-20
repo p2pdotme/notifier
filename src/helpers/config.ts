@@ -103,5 +103,11 @@ export function loadPriceConfig(): PriceConfig {
         telegramVenAlertsBotToken: requireEnv('TELEGRAM_VEN_ALERTS_BOT_TOKEN'),
         telegramVenPriceUpdatesChannelId: requireEnv('TELEGRAM_VEN_PRICE_UPDATES_CHANNEL_ID'),
         telegramVenPriceUpdatesTopicId: requireEnv('TELEGRAM_VEN_PRICE_UPDATES_TOPIC_ID'),
+        telegramNgnAlertsBotToken: requireEnv('TELEGRAM_NGN_ALERTS_BOT_TOKEN'),
+        telegramNgnPriceUpdatesChannelId: requireEnv('TELEGRAM_NGN_PRICE_UPDATES_CHANNEL_ID'),
+        telegramNgnPriceUpdatesTopicId: requireEnv('TELEGRAM_NGN_PRICE_UPDATES_TOPIC_ID'),
+        telegramCopAlertsBotToken: requireEnv('TELEGRAM_COP_ALERTS_BOT_TOKEN'),
+        telegramCopPriceUpdatesChannelId: requireEnv('TELEGRAM_COP_PRICE_UPDATES_CHANNEL_ID'),
+        telegramCopPriceUpdatesTopicId: requireEnv('TELEGRAM_COP_PRICE_UPDATES_TOPIC_ID'),
     };
 }
