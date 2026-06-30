@@ -73,6 +73,17 @@ export type OrderConfig = CommonConfig & {
     telegramVenDisputeTopicId: string;
     telegramVenReportTopicId: string;
 
+    // COP-specific
+    telegramCopBuyOrderBotToken: string;
+    telegramCopSellOrderBotToken: string;
+    telegramCopPayOrderBotToken: string;
+    telegramCopAlertsBotToken: string;
+    telegramCopReportBotToken: string;
+    telegramCopOrderUpdatesChannelId: string;
+    telegramCopOrderUpdatesTopicId: string;
+    telegramCopDisputeTopicId: string;
+    telegramCopReportTopicId: string;
+
     pushNotifXSecretKey: string;
     pushNotifBaseUrl: string;
     pushNotifImageUrl: string;
