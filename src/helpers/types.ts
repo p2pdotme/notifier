@@ -73,6 +73,17 @@ export type OrderConfig = CommonConfig & {
     telegramVenDisputeTopicId: string;
     telegramVenReportTopicId: string;
 
+    // ECU-specific (Ecuador — USD-based)
+    telegramEcuBuyOrderBotToken: string;
+    telegramEcuSellOrderBotToken: string;
+    telegramEcuPayOrderBotToken: string;
+    telegramEcuAlertsBotToken: string;
+    telegramEcuReportBotToken: string;
+    telegramEcuOrderUpdatesChannelId: string;
+    telegramEcuOrderUpdatesTopicId: string;
+    telegramEcuDisputeTopicId: string;
+    telegramEcuReportTopicId: string;
+
     pushNotifXSecretKey: string;
     pushNotifBaseUrl: string;
     pushNotifImageUrl: string;
