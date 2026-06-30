@@ -84,6 +84,17 @@ export type OrderConfig = CommonConfig & {
     telegramCopDisputeTopicId: string;
     telegramCopReportTopicId: string;
 
+    // ECU-specific (Ecuador — USD-based)
+    telegramEcuBuyOrderBotToken: string;
+    telegramEcuSellOrderBotToken: string;
+    telegramEcuPayOrderBotToken: string;
+    telegramEcuAlertsBotToken: string;
+    telegramEcuReportBotToken: string;
+    telegramEcuOrderUpdatesChannelId: string;
+    telegramEcuOrderUpdatesTopicId: string;
+    telegramEcuDisputeTopicId: string;
+    telegramEcuReportTopicId: string;
+
     pushNotifXSecretKey: string;
     pushNotifBaseUrl: string;
     pushNotifImageUrl: string;
@@ -130,4 +141,9 @@ export type PriceConfig = CommonConfig & {
     telegramCopAlertsBotToken: string;
     telegramCopPriceUpdatesChannelId: string;
     telegramCopPriceUpdatesTopicId: string;
+
+    // ECU-specific (Ecuador — USD-based, prices shown in $)
+    telegramEcuAlertsBotToken: string;
+    telegramEcuPriceUpdatesChannelId: string;
+    telegramEcuPriceUpdatesTopicId: string;
 };

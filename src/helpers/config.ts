@@ -83,7 +83,15 @@ export function loadOrderConfig(): OrderConfig {
         telegramCopOrderUpdatesTopicId: requireEnv('TELEGRAM_COP_ORDER_UPDATES_TOPIC_ID'),
         telegramCopDisputeTopicId: requireEnv('TELEGRAM_COP_DISPUTE_TOPIC_ID'),
         telegramCopReportTopicId: requireEnv('TELEGRAM_COP_REPORT_TOPIC_ID'),
-
+        telegramEcuBuyOrderBotToken: requireEnv('TELEGRAM_ECU_BUY_ORDER_BOT_TOKEN'),
+        telegramEcuSellOrderBotToken: requireEnv('TELEGRAM_ECU_SELL_ORDER_BOT_TOKEN'),
+        telegramEcuPayOrderBotToken: requireEnv('TELEGRAM_ECU_PAY_ORDER_BOT_TOKEN'),
+        telegramEcuAlertsBotToken: requireEnv('TELEGRAM_ECU_ALERTS_BOT_TOKEN'),
+        telegramEcuReportBotToken: requireEnv('TELEGRAM_ECU_REPORT_BOT_TOKEN'),
+        telegramEcuOrderUpdatesChannelId: requireEnv('TELEGRAM_ECU_ORDER_UPDATES_CHANNEL_ID'),
+        telegramEcuOrderUpdatesTopicId: requireEnv('TELEGRAM_ECU_ORDER_UPDATES_TOPIC_ID'),
+        telegramEcuDisputeTopicId: requireEnv('TELEGRAM_ECU_DISPUTE_TOPIC_ID'),
+        telegramEcuReportTopicId: requireEnv('TELEGRAM_ECU_REPORT_TOPIC_ID'),
         pushNotifXSecretKey: requireEnv('PUSH_NOTIF_X_SECRET_KEY'),
         pushNotifBaseUrl: requireEnv('PUSH_NOTIF_BASE_URL'),
         pushNotifImageUrl: requireEnv('PUSH_NOTIF_IMAGE_URL'),
@@ -119,5 +127,8 @@ export function loadPriceConfig(): PriceConfig {
         telegramCopAlertsBotToken: requireEnv('TELEGRAM_COP_ALERTS_BOT_TOKEN'),
         telegramCopPriceUpdatesChannelId: requireEnv('TELEGRAM_COP_PRICE_UPDATES_CHANNEL_ID'),
         telegramCopPriceUpdatesTopicId: requireEnv('TELEGRAM_COP_PRICE_UPDATES_TOPIC_ID'),
+        telegramEcuAlertsBotToken: requireEnv('TELEGRAM_ECU_ALERTS_BOT_TOKEN'),
+        telegramEcuPriceUpdatesChannelId: requireEnv('TELEGRAM_ECU_PRICE_UPDATES_CHANNEL_ID'),
+        telegramEcuPriceUpdatesTopicId: requireEnv('TELEGRAM_ECU_PRICE_UPDATES_TOPIC_ID'),
     };
 }

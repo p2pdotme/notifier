@@ -12,6 +12,7 @@ export const currencyMap: Record<string, string> = {
     [ethers.encodeBytes32String("VEN")]: "Ven",
     [ethers.encodeBytes32String("NGN")]: "Ngn",
     [ethers.encodeBytes32String("COP")]: "Cop",
+    [ethers.encodeBytes32String("ECU")]: "Ecu",
 };
 
 export const sendTelegramMessage = async (
