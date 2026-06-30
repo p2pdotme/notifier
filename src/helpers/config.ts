@@ -74,6 +74,7 @@ export function loadOrderConfig(): OrderConfig {
         telegramVenOrderUpdatesTopicId: requireEnv('TELEGRAM_VEN_ORDER_UPDATES_TOPIC_ID'),
         telegramVenDisputeTopicId: requireEnv('TELEGRAM_VEN_DISPUTE_TOPIC_ID'),
         telegramVenReportTopicId: requireEnv('TELEGRAM_VEN_REPORT_TOPIC_ID'),
+<<<<<<< HEAD
         telegramEcuBuyOrderBotToken: requireEnv('TELEGRAM_ECU_BUY_ORDER_BOT_TOKEN'),
         telegramEcuSellOrderBotToken: requireEnv('TELEGRAM_ECU_SELL_ORDER_BOT_TOKEN'),
         telegramEcuPayOrderBotToken: requireEnv('TELEGRAM_ECU_PAY_ORDER_BOT_TOKEN'),
@@ -83,6 +84,18 @@ export function loadOrderConfig(): OrderConfig {
         telegramEcuOrderUpdatesTopicId: requireEnv('TELEGRAM_ECU_ORDER_UPDATES_TOPIC_ID'),
         telegramEcuDisputeTopicId: requireEnv('TELEGRAM_ECU_DISPUTE_TOPIC_ID'),
         telegramEcuReportTopicId: requireEnv('TELEGRAM_ECU_REPORT_TOPIC_ID'),
+=======
+        telegramCopBuyOrderBotToken: requireEnv('TELEGRAM_COP_BUY_ORDER_BOT_TOKEN'),
+        telegramCopSellOrderBotToken: requireEnv('TELEGRAM_COP_SELL_ORDER_BOT_TOKEN'),
+        telegramCopPayOrderBotToken: requireEnv('TELEGRAM_COP_PAY_ORDER_BOT_TOKEN'),
+        telegramCopAlertsBotToken: requireEnv('TELEGRAM_COP_ALERTS_BOT_TOKEN'),
+        telegramCopReportBotToken: requireEnv('TELEGRAM_COP_REPORT_BOT_TOKEN'),
+        telegramCopOrderUpdatesChannelId: requireEnv('TELEGRAM_COP_ORDER_UPDATES_CHANNEL_ID'),
+        telegramCopOrderUpdatesTopicId: requireEnv('TELEGRAM_COP_ORDER_UPDATES_TOPIC_ID'),
+        telegramCopDisputeTopicId: requireEnv('TELEGRAM_COP_DISPUTE_TOPIC_ID'),
+        telegramCopReportTopicId: requireEnv('TELEGRAM_COP_REPORT_TOPIC_ID'),
+
+>>>>>>> main
         pushNotifXSecretKey: requireEnv('PUSH_NOTIF_X_SECRET_KEY'),
         pushNotifBaseUrl: requireEnv('PUSH_NOTIF_BASE_URL'),
         pushNotifImageUrl: requireEnv('PUSH_NOTIF_IMAGE_URL'),
