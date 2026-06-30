@@ -119,4 +119,9 @@ export type PriceConfig = CommonConfig & {
     telegramCopAlertsBotToken: string;
     telegramCopPriceUpdatesChannelId: string;
     telegramCopPriceUpdatesTopicId: string;
+
+    // ECU-specific (Ecuador — USD-based, prices shown in $)
+    telegramEcuAlertsBotToken: string;
+    telegramEcuPriceUpdatesChannelId: string;
+    telegramEcuPriceUpdatesTopicId: string;
 };

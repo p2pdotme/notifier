@@ -109,5 +109,8 @@ export function loadPriceConfig(): PriceConfig {
         telegramCopAlertsBotToken: requireEnv('TELEGRAM_COP_ALERTS_BOT_TOKEN'),
         telegramCopPriceUpdatesChannelId: requireEnv('TELEGRAM_COP_PRICE_UPDATES_CHANNEL_ID'),
         telegramCopPriceUpdatesTopicId: requireEnv('TELEGRAM_COP_PRICE_UPDATES_TOPIC_ID'),
+        telegramEcuAlertsBotToken: requireEnv('TELEGRAM_ECU_ALERTS_BOT_TOKEN'),
+        telegramEcuPriceUpdatesChannelId: requireEnv('TELEGRAM_ECU_PRICE_UPDATES_CHANNEL_ID'),
+        telegramEcuPriceUpdatesTopicId: requireEnv('TELEGRAM_ECU_PRICE_UPDATES_TOPIC_ID'),
     };
 }
