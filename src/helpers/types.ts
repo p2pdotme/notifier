@@ -73,18 +73,6 @@ export type OrderConfig = CommonConfig & {
     telegramVenDisputeTopicId: string;
     telegramVenReportTopicId: string;
 
-<<<<<<< HEAD
-    // ECU-specific (Ecuador — USD-based)
-    telegramEcuBuyOrderBotToken: string;
-    telegramEcuSellOrderBotToken: string;
-    telegramEcuPayOrderBotToken: string;
-    telegramEcuAlertsBotToken: string;
-    telegramEcuReportBotToken: string;
-    telegramEcuOrderUpdatesChannelId: string;
-    telegramEcuOrderUpdatesTopicId: string;
-    telegramEcuDisputeTopicId: string;
-    telegramEcuReportTopicId: string;
-=======
     // COP-specific
     telegramCopBuyOrderBotToken: string;
     telegramCopSellOrderBotToken: string;
@@ -95,7 +83,17 @@ export type OrderConfig = CommonConfig & {
     telegramCopOrderUpdatesTopicId: string;
     telegramCopDisputeTopicId: string;
     telegramCopReportTopicId: string;
->>>>>>> main
+
+    // ECU-specific (Ecuador — USD-based)
+    telegramEcuBuyOrderBotToken: string;
+    telegramEcuSellOrderBotToken: string;
+    telegramEcuPayOrderBotToken: string;
+    telegramEcuAlertsBotToken: string;
+    telegramEcuReportBotToken: string;
+    telegramEcuOrderUpdatesChannelId: string;
+    telegramEcuOrderUpdatesTopicId: string;
+    telegramEcuDisputeTopicId: string;
+    telegramEcuReportTopicId: string;
 
     pushNotifXSecretKey: string;
     pushNotifBaseUrl: string;
